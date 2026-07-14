@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First Kisan Expert - Ad System + Fasal Doctor</title>
+<style>
+  * { box-sizing: border-box; margin:0; padding:0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f1e8;
+    color: #1a1a1a;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a4d2e, #2d6a4f);
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 4px solid #d4af37;
+  }
+  .header h1 { font-size: 22px; }
+  .header .tagline { color: #d4af37; font-size: 14px; margin-top: 4px; }
+  .section {
+    max-width: 700px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-left: 5px solid #1a4d2e;
+  }
+  .section h2 {
+    color: #1a4d2e;
+    font-size: 18px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #d4af37;
+    padding-bottom: 6px;
+  }
+  /* ---- AD SYSTEM ---- */
+  .adsense-slot {
+    background: #eee;
+    border: 2px dashed #aaa;
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    font-size: 13px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+  }
+  .banner-rotator {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .banner-slide {
+    position: absolute;
+    top:0; left:0; width:100%; height:100%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+  }
+  .banner-slide.active { opacity: 1; }
+  .banner-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+  .banner-slide a { display:block; width:100%; height:100%; }
+
+  /* ---- FASAL DOCTOR ---- */
+  .chat-box {
+    height: 320px;
+    overflow-y: auto;
+    background: #fafafa;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+  }
+  .msg { margin-bottom: 10px; max-width: 85%; padding: 8px 12px; border-radius: 10px; font-size: 14px; line-height: 1.4; }
+  .msg.user { background: #1a4d2e; color:#fff; margin-left: auto; }
+  .msg.bot { background: #fff3d6; color:#333; border: 1px solid #d4af37; }
+  .msg img { max-width: 100%; border-radius: 6px; margin-top:6px; }
+  .input-row { display:flex; gap:8px; flex-wrap: wrap; }
+  .input-row input[type=text] {
+    flex: 1; min-width: 150px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;
+  }
+  .input-row button, .input-row label {
+    background: #1a4d2e; color: #fff; border: none; padding: 10px 14px;
+    border-radius: 6px; cursor: pointer; font-size: 14px;
+  }
+  .input-row label { display:flex; align-items:center; }
+  #imgPreview { max-width: 60px; border-radius:6px; margin-left:6px; }
+  .setup-note {
+    background: #fff3cd; border: 1px solid #ffe08a; padding: 10px; border-radius: 6px;
+    font-size: 12px; color: #6b4e00; margin-top: 12px;
+  }
+  code { background:#eee; padding:2px 5px; border-radius:4px; font-size:12px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🛡️ First Kisan Expert</h1>
+  <div class="tagline">किसानों की अपनी आवाज़</div>
+</div>
+
+<!-- ================= AD SYSTEM ================= -->
+<div class="section">
+  <h2>📢 Ad System</h2>
+
+  <div class="adsense-slot" id="adsense-block">
+    Google AdSense यहां दिखेगा<br>
+    (नीचे बताए कोड में अपना AdSense Publisher ID / Ad Slot ID डालें)
+  </div>
+
+  <div class="banner-rotator" id="bannerRotator"></div>
+
+  <div class="setup-note">
+    <b>Setup:</b><br>
+    1) <b>AdSense:</b> Google AdSense अकाउंट बनाओ → अपना <code>ca-pub-XXXX</code> ID लो → नीचे <code>&lt;head&gt;</code> में AdSense स्क्रिप्ट डालो, और <code>adsense-block</code> वाली जगह पर असली <code>&lt;ins class="adsbygoogle"&gt;</code> टैग डाल दो (कोड में कमेंट में लिखा है)।<br>
+    2) <b>अपने बैनर:</b> नीचे JS में <code>bannerAds</code> लिस्ट में जितने चाहें बैनर (image + link) जोड़ दो — अपने आप rotate होते रहेंगे।
+  </div>
+</div>
+
+<!-- ================= FASAL DOCTOR ================= -->
+<div class="section">
+  <h2>🌾 Fasal Doctor - रोग व मिट्टी जांच चैट</h2>
+
+  <div class="chat-box" id="chatBox">
+    <div class="msg bot">नमस्ते! अपने पौधे/खेत की फोटो खींचो या अपलोड करो, और बताओ क्या दिक्कत लग रही है। मैं बता दूंगा कि कौन सा रोग है, कौन सा कीड़ा है, मिट्टी में क्या कमी हो सकती है, और क्या करना चाहिए।</div>
+  </div>
+
+  <div class="input-row">
+    <label>📷 फोटो
+      <input type="file" id="imgInput" accept="image/*" capture="environment" style="display:none">
+    </label>
+    <img id="imgPreview" style="display:none">
+    <input type="text" id="userText" placeholder="जैसे: पत्तों पर पीले धब्बे हैं...">
+    <button onclick="sendToFasalDoctor()">भेजें</button>
+  </div>
+
+  <div class="setup-note">
+    <b>ज़रूरी सेटअप (सिर्फ एक बार, बिल्कुल फ्री, कार्ड नहीं चाहिए):</b><br>
+    1) <b>aistudio.google.com</b> पर जाओ, Google अकाउंट से sign in करो<br>
+    2) "Get API key" पर क्लिक करो → "Create API key" दबाओ → key कॉपी कर लो<br>
+    3) नीचे कोड में <code>GEMINI_API_KEY</code> वाली लाइन में यह key paste कर दो<br>
+    4) फाइल GitHub Pages पर अपलोड कर दो — बस, हो गया<br><br>
+    <i>रोज़ाना करीब 1,500 सवाल/फोटो तक बिल्कुल मुफ्त चलेंगे — आपके चैनल के लिए बहुत ज़्यादा है।</i>
+  </div>
+</div>
+
+<script>
+// ============ AD SYSTEM: Custom Banner Rotator ============
+const bannerAds = [
+  // { img: "https://.../banner1.jpg", link: "https://example.com" },
+  // यहां अपने बैनर जोड़ो, जितने चाहें उतने
+];
+
+const rotator = document.getElementById('bannerRotator');
+if (bannerAds.length > 0) {
+  bannerAds.forEach((ad, i) => {
+    const div = document.createElement('div');
+    div.className = 'banner-slide' + (i === 0 ? ' active' : '');
+    div.innerHTML = `<a href="${ad.link}" target="_blank"><img src="${ad.img}"></a>`;
+    rotator.appendChild(div);
+  });
+  let current = 0;
+  const slides = rotator.querySelectorAll('.banner-slide');
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 4000); // हर 4 सेकंड में बदलेगा
+} else {
+  rotator.innerHTML = '<div style="padding:20px;text-align:center;color:#999;background:#eee;border-radius:8px;">यहां अपने बैनर जोड़ो (bannerAds लिस्ट में)</div>';
+}
+
+// ============ FASAL DOCTOR: AI Chat ============
+const GEMINI_API_KEY = "PASTE_YOUR_FREE_GEMINI_API_KEY_HERE"; // यहां अपनी फ्री key डालो
+
+let selectedImageBase64 = null;
+const imgInput = document.getElementById('imgInput');
+const imgPreview = document.getElementById('imgPreview');
+
+imgInput.addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    selectedImageBase64 = evt.target.result.split(',')[1];
+    imgPreview.src = evt.target.result;
+    imgPreview.style.display = 'inline-block';
+  };
+  reader.readAsDataURL(file);
+});
+
+function addMsg(text, sender, imgSrc) {
+  const box = document.getElementById('chatBox');
+  const div = document.createElement('div');
+  div.className = 'msg ' + sender;
+  div.innerHTML = text.replace(/\n/g, '<br>');
+  if (imgSrc) {
+    const img = document.createElement('img');
+    img.src = imgSrc;
+    div.appendChild(img);
+  }
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+async function sendToFasalDoctor() {
+  const textInput = document.getElementById('userText');
+  const userMsg = textInput.value.trim();
+  if (!userMsg && !selectedImageBase64) return;
+
+  addMsg(userMsg || "(फोटो भेजी)", 'user', imgPreview.style.display !== 'none' ? imgPreview.src : null);
+  textInput.value = '';
+  addMsg('जांच हो रही है... ⏳', 'bot');
+
+  const promptText = `तुम एक भारतीय कृषि विशेषज्ञ हो। किसान ने यह भेजा है: "${userMsg}". फोटो देखकर (अगर दी हो) बताओ: 1) कौन सी बीमारी/कीड़ा दिख रहा है (नाम हिंदी में), 2) लक्षण क्या हैं, 3) कारण क्या है, 4) मिट्टी में किस पोषक तत्व की कमी हो सकती है, 5) क्या डालना चाहिए (सही इलाज/खाद), 6) गलत इलाज से बचने की चेतावनी। सीधी, आसान हिंदी में, किसान को समझ आए ऐसे जवाब दो। अगर फोटो साफ नहीं है या पक्का नहीं बता सकते तो वो भी ईमानदारी से बताओ और नज़दीकी KVK/कृषि विभाग से मिट्टी जांच कराने की सलाह दो।`;
+
+  const parts = [{ text: promptText }];
+  if (selectedImageBase64) {
+    parts.push({ inline_data: { mime_type: "image/jpeg", data: selectedImageBase64 } });
+  }
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: parts }] })
+      }
+    );
+    const data = await response.json();
+    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "माफ करना, जवाब नहीं मिल पाया। दोबारा कोशिश करें।";
+    // remove the "जांच हो रही है" placeholder
+    document.getElementById('chatBox').lastChild.remove();
+    addMsg(reply, 'bot');
+  } catch (err) {
+    document.getElementById('chatBox').lastChild.remove();
+    addMsg('कुछ गड़बड़ हुई। API key सही से डाली है क्या, चेक करें। (' + err.message + ')', 'bot');
+  }
+
+  selectedImageBase64 = null;
+  imgPreview.style.display = 'none';
+  imgInput.value = '';
+}
+</script>
+
+</body>
+</html>
