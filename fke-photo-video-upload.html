@@ -358,8 +358,8 @@
   async function loadGallery() {
     let items = [];
     try {
-      const res = await window.storage.get('fke-gallery', true);
-      if (res && res.value) items = JSON.parse(res.value);
+      const raw = localStorage.getItem('fke-gallery');
+      if (raw) items = JSON.parse(raw);
     } catch (e) {
       items = [];
     }
@@ -370,13 +370,13 @@
   async function saveGalleryItem(item) {
     let items = [];
     try {
-      const res = await window.storage.get('fke-gallery', true);
-      if (res && res.value) items = JSON.parse(res.value);
+      const raw = localStorage.getItem('fke-gallery');
+      if (raw) items = JSON.parse(raw);
     } catch (e) { items = []; }
     items.unshift(item);
     if (items.length > 60) items = items.slice(0, 60);
     try {
-      await window.storage.set('fke-gallery', JSON.stringify(items), true);
+      localStorage.setItem('fke-gallery', JSON.stringify(items));
     } catch (e) {
       console.error('gallery save failed', e);
     }
@@ -443,7 +443,7 @@
     if (currentPreviewIndex === null) return;
     const updated = currentGalleryItems.filter((_, i) => i !== currentPreviewIndex);
     try {
-      await window.storage.set('fke-gallery', JSON.stringify(updated), true);
+      localStorage.setItem('fke-gallery', JSON.stringify(updated));
       showToast('हटा दिया गया');
     } catch (e) {
       showToast('हटाने में दिक्कत हुई');
